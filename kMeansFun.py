@@ -34,9 +34,10 @@ def kMeansPlot(data, labels, numClust=False, kMehtod = "k-means++", nInit = 12, 
     A plot containing the original data and the kmeans cluster data. Includes
     centroids.
     """
-
+    dataClust = len(set(labels))
     if not numClust:
-        numClust = len(set(labels))
+        numClust = dataClust
+    
     kMeansCl = KMeans(init = "k-means++", n_clusters = numClust, n_init = nInit)
 
     kMeansCl.fit(data) # Fit k-means model to data
@@ -55,11 +56,42 @@ def kMeansPlot(data, labels, numClust=False, kMehtod = "k-means++", nInit = 12, 
 
     # Produce an array of colors based on the number of unique k-means labels
     labSet = set(kMeansLabs) # gives set of unique k-means labels
-    colors = plt.cm.Spectral(np.linspace(0, 1, len(labSet)))
+    colors1 = plt.cm.Spectral(np.linspace(0, 1, dataClust))
+    colors2 = plt.cm.Spectral(np.linspace(0, 1, len(labSet)))
 
     # For loop that plots the data points and centroids.
     # k will range from 0-3, which will match the possible clusters that each
     # data point is in.
+    for lab1, color in zip(range(dataClust), colors1):
+
+        # Create a list of all data points, where the data poitns that are 
+        # in the cluster (ex. cluster 0) are labeled as true, else they are
+        # labeled as false.
+        clustMemb1 = (labels == lab1)
+
+        if tempColorFix:
+            color = [colors1[i + (-1)**i] for i in range(len(colors1))][lab1]
+
+        # Plots the datapoints with color.
+        ax1.scatter(data[clustMemb1, 0], data[clustMemb1, 1], alpha = 0.33, c = [color], edgecolors = [color], s = 5)
+
+    for lab2, color in zip(range(numClust), colors2):
+
+        # Create a list of all data points, where the data poitns that are 
+        # in the cluster (ex. cluster 0) are labeled as true, else they are
+        # labeled as false.
+        clustMemb = (kMeansLabs == lab2)
+        
+        # Define the centroid, or cluster center.
+        kMeansCentroid = kMeansClCents[lab2]
+
+        # Plots the datapoints with color.
+        ax2.scatter(data[clustMemb, 0], data[clustMemb, 1], alpha = 0.33, c = [color], edgecolors = [color], s=5)
+        
+        # Plots the centroids with specified color, but with a darker outline
+        ax2.scatter(kMeansCentroid[0], kMeansCentroid[1], alpha = 1, c = [color], edgecolors = 'k', s=30)
+
+    '''
     for k, color in zip(range(numClust), colors):
 
         # Create a list of all data points, where the data poitns that are 
@@ -70,7 +102,7 @@ def kMeansPlot(data, labels, numClust=False, kMehtod = "k-means++", nInit = 12, 
         
         # Define the centroid, or cluster center.
         kMeansCentroid = kMeansClCents[k]
-        
+        print(len(colors))
         if tempColorFix:
             color2 = [colors[i + (-1)**i] for i in range(len(colors))][k]
         else:
@@ -81,7 +113,7 @@ def kMeansPlot(data, labels, numClust=False, kMehtod = "k-means++", nInit = 12, 
         
         # Plots the centroids with specified color, but with a darker outline
         ax2.scatter(kMeansCentroid[0], kMeansCentroid[1],alpha = 1, c = [color], edgecolors = 'k', s=30)
-
+    '''
     # Title of the plot
     ax1.set_title('randomly generated data')
     ax2.set_title('k-means data')

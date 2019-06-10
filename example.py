@@ -27,4 +27,4 @@ stdBlobs = 0.9
 
 coords, labs = make_blobs(n_samples = numSamp, centers = clCents, cluster_std = stdBlobs)
 
-kMeansPlot(coords, labs, saveFile = True)
+kMeansPlot(coords, labs, numClust = 4, tempColorFix=False,saveFile = True)
