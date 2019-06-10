@@ -1,10 +1,7 @@
 import matplotlib.pyplot as plt
-import pandas as pd
-import pylab as pl
 import numpy as np
 import os
 from sklearn.cluster import KMeans 
-from sklearn.datasets.samples_generator import make_blobs 
 
 
 
